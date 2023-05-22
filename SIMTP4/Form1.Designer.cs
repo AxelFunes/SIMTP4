@@ -40,31 +40,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgv_simulaciones = new System.Windows.Forms.DataGridView();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.txtDemMinAprendiz = new System.Windows.Forms.TextBox();
-            this.txtDemMaxAprendiz = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.txtProbVetA = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.txtProbVetB = new System.Windows.Forms.TextBox();
-            this.txtProbAprendiz = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtDemMinVetA = new System.Windows.Forms.TextBox();
-            this.txtDemMaxVetA = new System.Windows.Forms.TextBox();
-            this.txtDemMinVetB = new System.Windows.Forms.TextBox();
-            this.txtDemMaxVetB = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.txt_desde = new System.Windows.Forms.TextBox();
-            this.txtTiempoSimulacion = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txt_hasta = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.Column24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -89,7 +64,32 @@
             this.Column21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column22 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column23 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.txtDemMinVetB = new System.Windows.Forms.TextBox();
+            this.txtDemMaxVetB = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtDemMinVetA = new System.Windows.Forms.TextBox();
+            this.txtDemMaxVetA = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.txtDemMinAprendiz = new System.Windows.Forms.TextBox();
+            this.txtDemMaxAprendiz = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.txtProbVetA = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txtProbVetB = new System.Windows.Forms.TextBox();
+            this.txtProbAprendiz = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btn_Simular = new System.Windows.Forms.Button();
+            this.txt_desde = new System.Windows.Forms.TextBox();
+            this.txtTiempoSimulacion = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txt_hasta = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txtDemMinCliente = new System.Windows.Forms.TextBox();
@@ -171,245 +171,6 @@
             this.dgv_simulaciones.RowsDefaultCellStyle = dataGridViewCellStyle11;
             this.dgv_simulaciones.Size = new System.Drawing.Size(1202, 452);
             this.dgv_simulaciones.TabIndex = 12;
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(235)))));
-            this.groupBox4.Controls.Add(this.txtDemMinVetB);
-            this.groupBox4.Controls.Add(this.txtDemMaxVetB);
-            this.groupBox4.Controls.Add(this.label2);
-            this.groupBox4.Controls.Add(this.txtDemMinVetA);
-            this.groupBox4.Controls.Add(this.txtDemMaxVetA);
-            this.groupBox4.Controls.Add(this.label17);
-            this.groupBox4.Controls.Add(this.label18);
-            this.groupBox4.Controls.Add(this.txtDemMinAprendiz);
-            this.groupBox4.Controls.Add(this.txtDemMaxAprendiz);
-            this.groupBox4.ForeColor = System.Drawing.Color.Black;
-            this.groupBox4.Location = new System.Drawing.Point(636, 26);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(233, 152);
-            this.groupBox4.TabIndex = 52;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "DEMORA EN EFECTUAR CORTE";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(26, 74);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(60, 13);
-            this.label17.TabIndex = 37;
-            this.label17.Text = "Veterano A";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(26, 32);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(48, 13);
-            this.label18.TabIndex = 38;
-            this.label18.Text = "Aprendiz";
-            // 
-            // txtDemMinAprendiz
-            // 
-            this.txtDemMinAprendiz.Location = new System.Drawing.Point(92, 29);
-            this.txtDemMinAprendiz.Name = "txtDemMinAprendiz";
-            this.txtDemMinAprendiz.Size = new System.Drawing.Size(48, 20);
-            this.txtDemMinAprendiz.TabIndex = 39;
-            this.txtDemMinAprendiz.Text = "20";
-            // 
-            // txtDemMaxAprendiz
-            // 
-            this.txtDemMaxAprendiz.Location = new System.Drawing.Point(159, 29);
-            this.txtDemMaxAprendiz.Name = "txtDemMaxAprendiz";
-            this.txtDemMaxAprendiz.Size = new System.Drawing.Size(48, 20);
-            this.txtDemMaxAprendiz.TabIndex = 40;
-            this.txtDemMaxAprendiz.Text = "30";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(235)))));
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label20);
-            this.groupBox1.Controls.Add(this.txtProbVetA);
-            this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Controls.Add(this.txtProbVetB);
-            this.groupBox1.Controls.Add(this.txtProbAprendiz);
-            this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.ForeColor = System.Drawing.Color.Black;
-            this.groupBox1.Location = new System.Drawing.Point(905, 26);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(207, 152);
-            this.groupBox1.TabIndex = 51;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "PORCENTAJE DE ATENCION";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(24, 78);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(60, 13);
-            this.label20.TabIndex = 45;
-            this.label20.Text = "Veterano A";
-            // 
-            // txtProbVetA
-            // 
-            this.txtProbVetA.Location = new System.Drawing.Point(116, 75);
-            this.txtProbVetA.Name = "txtProbVetA";
-            this.txtProbVetA.Size = new System.Drawing.Size(48, 20);
-            this.txtProbVetA.TabIndex = 41;
-            this.txtProbVetA.Text = "45";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(24, 104);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(60, 13);
-            this.label21.TabIndex = 46;
-            this.label21.Text = "Veterano B";
-            // 
-            // txtProbVetB
-            // 
-            this.txtProbVetB.Location = new System.Drawing.Point(116, 101);
-            this.txtProbVetB.Name = "txtProbVetB";
-            this.txtProbVetB.Size = new System.Drawing.Size(48, 20);
-            this.txtProbVetB.TabIndex = 42;
-            this.txtProbVetB.Text = "40";
-            // 
-            // txtProbAprendiz
-            // 
-            this.txtProbAprendiz.Location = new System.Drawing.Point(116, 48);
-            this.txtProbAprendiz.Name = "txtProbAprendiz";
-            this.txtProbAprendiz.Size = new System.Drawing.Size(48, 20);
-            this.txtProbAprendiz.TabIndex = 43;
-            this.txtProbAprendiz.Text = "15";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(24, 51);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(48, 13);
-            this.label19.TabIndex = 44;
-            this.label19.Text = "Aprendiz";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(113, 29);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 13);
-            this.label1.TabIndex = 47;
-            this.label1.Text = "Probabilidad (%)";
-            // 
-            // txtDemMinVetA
-            // 
-            this.txtDemMinVetA.Location = new System.Drawing.Point(92, 70);
-            this.txtDemMinVetA.Name = "txtDemMinVetA";
-            this.txtDemMinVetA.Size = new System.Drawing.Size(48, 20);
-            this.txtDemMinVetA.TabIndex = 41;
-            this.txtDemMinVetA.Text = "11";
-            // 
-            // txtDemMaxVetA
-            // 
-            this.txtDemMaxVetA.Location = new System.Drawing.Point(159, 70);
-            this.txtDemMaxVetA.Name = "txtDemMaxVetA";
-            this.txtDemMaxVetA.Size = new System.Drawing.Size(48, 20);
-            this.txtDemMaxVetA.TabIndex = 42;
-            this.txtDemMaxVetA.Text = "13";
-            // 
-            // txtDemMinVetB
-            // 
-            this.txtDemMinVetB.Location = new System.Drawing.Point(92, 114);
-            this.txtDemMinVetB.Name = "txtDemMinVetB";
-            this.txtDemMinVetB.Size = new System.Drawing.Size(48, 20);
-            this.txtDemMinVetB.TabIndex = 44;
-            this.txtDemMinVetB.Text = "12";
-            // 
-            // txtDemMaxVetB
-            // 
-            this.txtDemMaxVetB.Location = new System.Drawing.Point(159, 114);
-            this.txtDemMaxVetB.Name = "txtDemMaxVetB";
-            this.txtDemMaxVetB.Size = new System.Drawing.Size(48, 20);
-            this.txtDemMaxVetB.TabIndex = 45;
-            this.txtDemMaxVetB.Text = "18";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 118);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 43;
-            this.label2.Text = "Veterano B";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(235)))));
-            this.groupBox5.Controls.Add(this.btn_Simular);
-            this.groupBox5.Controls.Add(this.txt_desde);
-            this.groupBox5.Controls.Add(this.txtTiempoSimulacion);
-            this.groupBox5.Controls.Add(this.label3);
-            this.groupBox5.Controls.Add(this.label4);
-            this.groupBox5.Controls.Add(this.txt_hasta);
-            this.groupBox5.Controls.Add(this.label5);
-            this.groupBox5.ForeColor = System.Drawing.Color.Black;
-            this.groupBox5.Location = new System.Drawing.Point(59, 26);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(307, 180);
-            this.groupBox5.TabIndex = 53;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "SIMULACIONES";
-            // 
-            // txt_desde
-            // 
-            this.txt_desde.Location = new System.Drawing.Point(157, 59);
-            this.txt_desde.Name = "txt_desde";
-            this.txt_desde.Size = new System.Drawing.Size(116, 20);
-            this.txt_desde.TabIndex = 8;
-            // 
-            // txtTiempoSimulacion
-            // 
-            this.txtTiempoSimulacion.Location = new System.Drawing.Point(157, 29);
-            this.txtTiempoSimulacion.Name = "txtTiempoSimulacion";
-            this.txtTiempoSimulacion.Size = new System.Drawing.Size(116, 20);
-            this.txtTiempoSimulacion.TabIndex = 7;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(19, 31);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(122, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Tiempo a Simular en min";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(84, 66);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 13);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "Desde";
-            // 
-            // txt_hasta
-            // 
-            this.txt_hasta.Location = new System.Drawing.Point(157, 96);
-            this.txt_hasta.Name = "txt_hasta";
-            this.txt_hasta.Size = new System.Drawing.Size(116, 20);
-            this.txt_hasta.TabIndex = 9;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(82, 99);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(59, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Iteraciones";
             // 
             // Column24
             // 
@@ -623,6 +384,197 @@
             this.Column23.ReadOnly = true;
             this.Column23.Width = 118;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(235)))));
+            this.groupBox4.Controls.Add(this.txtDemMinVetB);
+            this.groupBox4.Controls.Add(this.txtDemMaxVetB);
+            this.groupBox4.Controls.Add(this.label2);
+            this.groupBox4.Controls.Add(this.txtDemMinVetA);
+            this.groupBox4.Controls.Add(this.txtDemMaxVetA);
+            this.groupBox4.Controls.Add(this.label17);
+            this.groupBox4.Controls.Add(this.label18);
+            this.groupBox4.Controls.Add(this.txtDemMinAprendiz);
+            this.groupBox4.Controls.Add(this.txtDemMaxAprendiz);
+            this.groupBox4.ForeColor = System.Drawing.Color.Black;
+            this.groupBox4.Location = new System.Drawing.Point(636, 26);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(233, 152);
+            this.groupBox4.TabIndex = 52;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "DEMORA EN EFECTUAR CORTE";
+            // 
+            // txtDemMinVetB
+            // 
+            this.txtDemMinVetB.Location = new System.Drawing.Point(92, 114);
+            this.txtDemMinVetB.Name = "txtDemMinVetB";
+            this.txtDemMinVetB.Size = new System.Drawing.Size(48, 20);
+            this.txtDemMinVetB.TabIndex = 44;
+            this.txtDemMinVetB.Text = "12";
+            // 
+            // txtDemMaxVetB
+            // 
+            this.txtDemMaxVetB.Location = new System.Drawing.Point(159, 114);
+            this.txtDemMaxVetB.Name = "txtDemMaxVetB";
+            this.txtDemMaxVetB.Size = new System.Drawing.Size(48, 20);
+            this.txtDemMaxVetB.TabIndex = 45;
+            this.txtDemMaxVetB.Text = "18";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(26, 118);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.TabIndex = 43;
+            this.label2.Text = "Veterano B";
+            // 
+            // txtDemMinVetA
+            // 
+            this.txtDemMinVetA.Location = new System.Drawing.Point(92, 70);
+            this.txtDemMinVetA.Name = "txtDemMinVetA";
+            this.txtDemMinVetA.Size = new System.Drawing.Size(48, 20);
+            this.txtDemMinVetA.TabIndex = 41;
+            this.txtDemMinVetA.Text = "11";
+            // 
+            // txtDemMaxVetA
+            // 
+            this.txtDemMaxVetA.Location = new System.Drawing.Point(159, 70);
+            this.txtDemMaxVetA.Name = "txtDemMaxVetA";
+            this.txtDemMaxVetA.Size = new System.Drawing.Size(48, 20);
+            this.txtDemMaxVetA.TabIndex = 42;
+            this.txtDemMaxVetA.Text = "13";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(26, 74);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(60, 13);
+            this.label17.TabIndex = 37;
+            this.label17.Text = "Veterano A";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(26, 32);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(48, 13);
+            this.label18.TabIndex = 38;
+            this.label18.Text = "Aprendiz";
+            // 
+            // txtDemMinAprendiz
+            // 
+            this.txtDemMinAprendiz.Location = new System.Drawing.Point(92, 29);
+            this.txtDemMinAprendiz.Name = "txtDemMinAprendiz";
+            this.txtDemMinAprendiz.Size = new System.Drawing.Size(48, 20);
+            this.txtDemMinAprendiz.TabIndex = 39;
+            this.txtDemMinAprendiz.Text = "20";
+            // 
+            // txtDemMaxAprendiz
+            // 
+            this.txtDemMaxAprendiz.Location = new System.Drawing.Point(159, 29);
+            this.txtDemMaxAprendiz.Name = "txtDemMaxAprendiz";
+            this.txtDemMaxAprendiz.Size = new System.Drawing.Size(48, 20);
+            this.txtDemMaxAprendiz.TabIndex = 40;
+            this.txtDemMaxAprendiz.Text = "30";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(235)))));
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.label20);
+            this.groupBox1.Controls.Add(this.txtProbVetA);
+            this.groupBox1.Controls.Add(this.label21);
+            this.groupBox1.Controls.Add(this.txtProbVetB);
+            this.groupBox1.Controls.Add(this.txtProbAprendiz);
+            this.groupBox1.Controls.Add(this.label19);
+            this.groupBox1.ForeColor = System.Drawing.Color.Black;
+            this.groupBox1.Location = new System.Drawing.Point(905, 26);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(207, 152);
+            this.groupBox1.TabIndex = 51;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "PORCENTAJE DE ATENCION";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(113, 29);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 13);
+            this.label1.TabIndex = 47;
+            this.label1.Text = "Probabilidad (%)";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(24, 78);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(60, 13);
+            this.label20.TabIndex = 45;
+            this.label20.Text = "Veterano A";
+            // 
+            // txtProbVetA
+            // 
+            this.txtProbVetA.Location = new System.Drawing.Point(116, 75);
+            this.txtProbVetA.Name = "txtProbVetA";
+            this.txtProbVetA.Size = new System.Drawing.Size(48, 20);
+            this.txtProbVetA.TabIndex = 41;
+            this.txtProbVetA.Text = "45";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(24, 104);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(60, 13);
+            this.label21.TabIndex = 46;
+            this.label21.Text = "Veterano B";
+            // 
+            // txtProbVetB
+            // 
+            this.txtProbVetB.Location = new System.Drawing.Point(116, 101);
+            this.txtProbVetB.Name = "txtProbVetB";
+            this.txtProbVetB.Size = new System.Drawing.Size(48, 20);
+            this.txtProbVetB.TabIndex = 42;
+            this.txtProbVetB.Text = "40";
+            // 
+            // txtProbAprendiz
+            // 
+            this.txtProbAprendiz.Location = new System.Drawing.Point(116, 48);
+            this.txtProbAprendiz.Name = "txtProbAprendiz";
+            this.txtProbAprendiz.Size = new System.Drawing.Size(48, 20);
+            this.txtProbAprendiz.TabIndex = 43;
+            this.txtProbAprendiz.Text = "15";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(24, 51);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(48, 13);
+            this.label19.TabIndex = 44;
+            this.label19.Text = "Aprendiz";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(235)))));
+            this.groupBox5.Controls.Add(this.btn_Simular);
+            this.groupBox5.Controls.Add(this.txt_desde);
+            this.groupBox5.Controls.Add(this.txtTiempoSimulacion);
+            this.groupBox5.Controls.Add(this.label3);
+            this.groupBox5.Controls.Add(this.label4);
+            this.groupBox5.Controls.Add(this.txt_hasta);
+            this.groupBox5.Controls.Add(this.label5);
+            this.groupBox5.ForeColor = System.Drawing.Color.Black;
+            this.groupBox5.Location = new System.Drawing.Point(59, 26);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(307, 180);
+            this.groupBox5.TabIndex = 53;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "SIMULACIONES";
+            // 
             // btn_Simular
             // 
             this.btn_Simular.Location = new System.Drawing.Point(66, 142);
@@ -632,6 +584,54 @@
             this.btn_Simular.Text = "Simular";
             this.btn_Simular.UseVisualStyleBackColor = true;
             this.btn_Simular.Click += new System.EventHandler(this.btn_Simular_Click);
+            // 
+            // txt_desde
+            // 
+            this.txt_desde.Location = new System.Drawing.Point(157, 63);
+            this.txt_desde.Name = "txt_desde";
+            this.txt_desde.Size = new System.Drawing.Size(116, 20);
+            this.txt_desde.TabIndex = 8;
+            // 
+            // txtTiempoSimulacion
+            // 
+            this.txtTiempoSimulacion.Location = new System.Drawing.Point(157, 29);
+            this.txtTiempoSimulacion.Name = "txtTiempoSimulacion";
+            this.txtTiempoSimulacion.Size = new System.Drawing.Size(116, 20);
+            this.txtTiempoSimulacion.TabIndex = 7;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(19, 31);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(125, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Tiempo a Simular en dias";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(84, 66);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(60, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Desde (Hs)";
+            // 
+            // txt_hasta
+            // 
+            this.txt_hasta.Location = new System.Drawing.Point(157, 96);
+            this.txt_hasta.Name = "txt_hasta";
+            this.txt_hasta.Size = new System.Drawing.Size(116, 20);
+            this.txt_hasta.TabIndex = 9;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(82, 99);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(59, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Iteraciones";
             // 
             // groupBox2
             // 
