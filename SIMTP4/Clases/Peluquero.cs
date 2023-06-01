@@ -8,7 +8,7 @@ namespace SIMTP4.Clases
 {
     public class Peluquero
     {
-        //private string nombre;
+        private string nombre;
         private double demoraMinima;
         private double demoraMaxima;
         private float porcentajeAtencion;
@@ -17,12 +17,12 @@ namespace SIMTP4.Clases
         private double finAtencion;
         //private List<Cliente> ;
 
-        /*public string Nombre
+        public string Nombre
         {
             get { return nombre; }
             set { nombre = value; }
         }
-        */
+        
         public double DemoraMinima
         {
             get { return demoraMinima; }

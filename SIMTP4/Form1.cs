@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -26,7 +27,53 @@ namespace SIMTP4
         double random_atencionVetB;
 
         string peluquero;
+        private int simulaciones;
+        private int dias;
+        List<Cliente> listCliente = new List<Cliente>();
+        List<Peluquero> ListServidor = new List<Peluquero>();
 
+        //Variables para Generar la simulacion de colas
+        string Evento;
+        string Evento_Anterior;
+        double? Reloj = 0;
+        double Reloj_Anterior;
+
+
+        //Variables para Llegada de Proximo Cliente
+        double Random_Matricula;
+        double Hora_Llegada_Matricula;
+        double Random_Renovacion;
+        double Hora_Llegada_Renovacion;
+        double Tiempo_Entre_Llegada;
+        string Tipo_Cliente;
+        double Proxima_Llegada;
+        double Proxima_Llegada_Anterior;
+
+        //Variables para Fin de Atencion
+        double Random_Tiempo_Atencion;
+        double Tiempo_Atencion;
+        double? Fin_Manuel = 0;
+
+        //Zona Matricula
+        double? Fin_Tomas = 0;
+        double? Fin_Alicia = 0;
+
+        //Zona Renovacion
+        double? Fin_Lucia = 0;
+        double? Fin_Maria = 0;
+
+
+        //Variables Para Servidores
+        //Servidor Matricula
+        int Cola_Matricula;
+        string Estado_Tomas;
+        string Estado_Alicia;
+
+        int Cola_Renovacion;
+        string Estado_Lucia;
+        string Estado_Maria;
+
+        string Estado_Manuel;
 
         public Form1()
         {
@@ -34,7 +81,7 @@ namespace SIMTP4
         }
 
         private void btn_Simular_Click(object sender, EventArgs e)
-        {
+        {/*
             double demMinAprendiz = Convert.ToDouble(txtDemMinAprendiz.Text);
             double demMaxAprendiz = Convert.ToDouble(txtDemMaxAprendiz.Text);
             double demMinVetA = Convert.ToDouble(txtDemMinVetA.Text);
@@ -48,14 +95,102 @@ namespace SIMTP4
             veteranoB.DemoraMinima= demMinVetB;
             veteranoB.DemoraMaxima = demMaxVetB;
 
-            double dias= Convert.ToDouble(txtTiempoSimulacion.Text);
+            int dias= Convert.ToDouble(txtTiempoSimulacion.Text);
             double desde = Convert.ToDouble(txt_desde.Text);
             double hasta = Convert.ToDouble(txt_hasta.Text);
 
-            simulacion(dias, desde, hasta);
+            simulacion(dias, desde, hasta);*/
+            if (txtTiempoSimulacion.Text != "") //faltan validaciones
+            {
 
+                dias = Convert.ToInt32(txtTiempoSimulacion.Text);//cant de dias a simular
+                //Variable_3 = true; Ver que hace
+
+                Simulacion_Cero();
+                for (int i = 0; i < simulaciones; i++)
+                {
+                    Comenzar();
+                    cargarGrilla();
+                }
+
+                if (Variable_3 == true)
+                {
+                    foreach (var item in listCliente)
+                    {
+                        dgv_Clientes.Rows.Add(item.numero, item.estado, item.Servidor, item.Tipo_Cliente, item.TiempoEspera, item.esta_en_cola);
+                    }
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Coloque valores en la celda Simular");
+            }
 
         }
+
+        private void Simulacion_Cero()
+        {
+            listCliente.Clear();
+
+            Calcular_Tiempo_Entre_Llegada();
+
+            //Proxima_Llegada = Tiempo_Entre_Llegada;
+            //Proxima_Llegada_Anterior = Tiempo_Entre_Llegada;
+
+            foreach (var item in ListServidor)
+            {
+                item.estado = Servidor.Estado.Libre;
+                item.Fin_Tiempo_Atencion = null;
+            }
+
+
+            Evento = "Llegada Cliente";
+
+            Menor_Hora_Proximo_Evento = Proxima_Llegada;
+
+            Estado_Tomas = "Libre";
+            Estado_Alicia = "Libre";
+            Estado_Lucia = "Libre";
+            Estado_Maria = "Libre";
+            Estado_Manuel = "Libre";
+            Fin_Tomas = 0;
+            Fin_Alicia = 0;
+            Fin_Lucia = 0;
+            Fin_Maria = 0;
+            Fin_Manuel = 0;
+
+            Cola_Matricula = 0;
+            Cola_Renovacion = 0;
+
+
+
+            cargarGrilla();
+        }
+
+        private void Calcular_Tiempo_Entre_Llegada()
+        {
+            Random_Matricula = rnd.NextDouble();
+            Hora_Llegada_Matricula = -3 * Math.Log(1 - Random_Matricula);
+            Random_Renovacion = rnd.NextDouble();
+            Hora_Llegada_Renovacion = -5 * Math.Log(1 - Random_Renovacion);
+
+            if (Hora_Llegada_Matricula < Hora_Llegada_Renovacion)
+            {
+                Tiempo_Entre_Llegada = Hora_Llegada_Matricula;
+                Proxima_Llegada = (double)(Tiempo_Entre_Llegada + Reloj);
+                contadorCliente++;
+                listCliente.Add(new Cliente { numero = contadorCliente, estado = Cliente.Estado.Esperando_Atencion, Servidor = "", Tipo_Cliente = "Matricula", TiempoEspera = 0, esta_en_cola = Cliente.EstaEnCola.No });
+            }
+            else
+            {
+                Tiempo_Entre_Llegada = Hora_Llegada_Renovacion;
+                Proxima_Llegada = (double)(Tiempo_Entre_Llegada + Reloj);
+                contadorCliente++;
+                listCliente.Add(new Cliente { numero = contadorCliente, estado = Cliente.Estado.Esperando_Atencion, Servidor = "", Tipo_Cliente = "Renovacion", TiempoEspera = 0, esta_en_cola = Cliente.EstaEnCola.No });
+            }
+        }
+    }
 
         public void simulacion(double dias, double desde, double hasta)
         {
