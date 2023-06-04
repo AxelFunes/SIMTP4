@@ -11,35 +11,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SIMTP4.Form1.Peluquero;
+using static SIMTP4.Form1.Cliente;
 
 namespace SIMTP4
 {
     public partial class Form1 : Form
     {
         public Peluquero aprendiz = new Peluquero();
-        public Peluquero veteranoA = new Peluquero(); 
+        public Peluquero veteranoA = new Peluquero();
         public Peluquero veteranoB = new Peluquero();
         //Clases
         public class Peluquero
         {
-            public enum Nombre { Aprendiz, VeteranoA, VeteranoB };
+            //public enum Nombre { Aprendiz, VeteranoA, VeteranoB };
             public string nombre;
-            public enum Estado { Libre, Ocupado };
-            public Estado estado;
+            public string estado;
             public double? finTiempoAtencion;
             public double demoraMinima;
             public double demoraMaxima;
             public double tiempoAtencion;
+            public int cola;
         }
         public class Cliente
         {
-            public int numero;
-            public enum Estado { Esperando_Atencion, Siendo_Atendido, Destruido };
-            public Estado estado;
-            public string Peluquero;           
+            //public int numero;
+            //public enum Estado { Esperando_Atencion, Siendo_Atendido, Destruido };
+            public string estado;
+            public string Peluquero;
             public double? TiempoEspera;
-            public enum EstaEnCola { Si, No }
-            public EstaEnCola esta_en_cola;
         }
         //public Random random_peluquero = new Random();
 
@@ -50,10 +49,12 @@ namespace SIMTP4
         double random_atencionVetB;
 
         string peluquero;
+        Cliente clientePelu = new Cliente();
         private int simulaciones;
         private int dias;
         List<Cliente> listCliente = new List<Cliente>();
         List<Peluquero> ListPeluquero = new List<Peluquero>();
+
 
         //Variables para Generar la simulacion de colas
         string Evento;
@@ -64,18 +65,19 @@ namespace SIMTP4
         //tiempo entre llegadas
         private int demoraMinima;
         private int demoraMaxima;
-        private double HoraProxLlegada;
+        private double demoraCliente;
         private Random rnd = new Random();
 
         //simulacion
         private Peluquero peluqueroSeleccionado;
-        private double proximaLlegada;
+        private double proximaLlegada= 0;
         private double? menorTiempoFin;
         private double? Menor_Hora_Proximo_Evento;
+        private string nombrePeluquero;
 
         //Variables para Llegada de Proximo Cliente
-        double randomDemora;
-        private double randomDemoraPeluquero;
+        double randomDemoraCliente;
+        double randomDemoraPeluquero;
         double Hora_Llegada_Matricula;
         double Random_Renovacion;
         double Hora_Llegada_Renovacion;
@@ -99,16 +101,16 @@ namespace SIMTP4
 
 
         //Variables Para Servidores
-        int colaAprendiz;
-        int colaVeteranoA;
-        int colaVeteranoB;
+        //int colaAprendiz;
+        //int colaVeteranoA;
+        //int colaVeteranoB;
         string estadoAprendiz;
         string estadoVeteranoA;
         string estadoVeteranoB;
         double? finAprendiz;
         double? finVeteranoA;
         double? finVeteranoB;
-        private int contadorCliente= 0;
+        //private int contadorCliente = 0;
 
         public Form1()
         {
@@ -140,12 +142,12 @@ namespace SIMTP4
 
                 dias = Convert.ToInt32(txtTiempoSimulacion.Text);//cant de dias a simular
                 //Variable_3 = true; Ver que hace
-
+                
                 Simulacion_Cero();
-                for (int i = 0; i < simulaciones; i++)
+                for (int i = 0; i < dias; i++)
                 {
                     Comenzar();
-                    cargarGrilla();
+                    //cargarGrilla();
                 }
                 /*
                 if (Variable_3 == true)
@@ -166,30 +168,58 @@ namespace SIMTP4
 
         private void Comenzar()
         {
-            ObtenerPeluquero();
+            //ObtenerPeluquero();
             Elegir_Menor_Para_Proximo_Evento();
             Reloj = Menor_Hora_Proximo_Evento;
 
-            if (Menor_Hora_Proximo_Evento < 480)
+            if (Reloj < 480)
             {
-                if (Evento=="Llegada Cliente")
+                if (Evento == "Llegada Cliente")
                 {
-                    foreach (var item in ListPeluquero)
+                    
+                    nombrePeluquero = ObtenerPeluquero();
+                    foreach (var peluquero in ListPeluquero)
                     {
-                        if (item.nombre == peluqueroSeleccionado.nombre)
+                        if (peluquero.nombre == nombrePeluquero)
                         {
-                            item.estado = Peluquero.Estado.Ocupado;
-                            
+                            AsignarClienteAPeluquero(peluquero);
                         }
                     }
+                    Calcular_Tiempo_Entre_Llegada();
+                    //contadorCliente++;
+                    CancelacionCliente();
+                    cargarGrilla();
                 }
-                else if (Evento=="Fin Atencion")
+                else if (Evento == "Fin Atencion")
                 {
-
+                    foreach (var peluquero in ListPeluquero)
+                    {
+                        if (peluquero.finTiempoAtencion == menorTiempoFin)
+                        {
+                            if (peluquero.cola != 0)
+                            {
+                                peluquero.cola--;
+                                peluquero.estado = "Ocupado";
+                                clientePelu = listCliente.First(x => x.Peluquero == peluquero.nombre && x.estado =="Esperando Atencion");
+                                clientePelu.estado = "Siendo Atendido";
+                            }
+                            else
+                            {
+                                peluquero.tiempoAtencion = 0;
+                                peluquero.finTiempoAtencion = null;
+                                peluquero.estado = "Libre";
+                            }
+                        }
+                    }
+                    cargarGrilla();
                 }
-                
-                
+
+
             }
+        }
+        public void CancelacionCliente()
+        {
+
         }
         public void Elegir_Menor_Para_Proximo_Evento()
         {
@@ -198,20 +228,20 @@ namespace SIMTP4
 
             if (menorTiempoFin != null)
             {
-                if (Proxima_Llegada > menorTiempoFin)
+                if (proximaLlegada > menorTiempoFin)
                 {
                     Menor_Hora_Proximo_Evento = menorTiempoFin;
                     Evento = "Fin Atencion";
                 }
                 else
                 {
-                    Menor_Hora_Proximo_Evento = Proxima_Llegada;
+                    Menor_Hora_Proximo_Evento = proximaLlegada;
                     Evento = "Llegada Cliente";
                 }
             }
             else
             {
-                Menor_Hora_Proximo_Evento = Proxima_Llegada;
+                Menor_Hora_Proximo_Evento = proximaLlegada;
                 Evento = "Llegada Cliente";
             }
 
@@ -222,235 +252,132 @@ namespace SIMTP4
         {
             listCliente.Clear();
             //ObtenerPeluquero();
-            Calcular_Tiempo_Entre_Llegada();
+            calcularPrimerLlegada();
 
             //Proxima_Llegada = Tiempo_Entre_Llegada;
             //Proxima_Llegada_Anterior = Tiempo_Entre_Llegada;
 
             foreach (var item in ListPeluquero)
             {
-                item.estado = Peluquero.Estado.Libre;
+                item.estado = "Libre";
                 item.finTiempoAtencion = null;
             }
 
 
-            Evento = "Llegada Cliente";
+            Evento = "Inicializacion";
 
             Menor_Hora_Proximo_Evento = Proxima_Llegada;
 
             estadoAprendiz = "Libre";
             estadoVeteranoA = "Libre";
             estadoVeteranoB = "Libre";
-            
+
             finAprendiz = 0;
             finVeteranoA = 0;
             finVeteranoB = 0;
 
-            colaAprendiz = 0;
-            colaVeteranoA = 0;
-            colaVeteranoB = 0;
+            //colaAprendiz = 0;
+            //colaVeteranoA = 0;
+            //colaVeteranoB = 0;
 
 
-            //cargarGrilla();
+            cargarGrilla();
+            Evento = "LlegadaCliente";
         }
 
-        private void ObtenerPeluquero()
+        private String ObtenerPeluquero()
         {
             double prob0 = Convert.ToDouble(txtProbAprendiz.Text) / 100;
             double prob1 = Convert.ToDouble(txtProbVetA.Text) / 100;
             random_peluquero = rnd.NextDouble();
+            string nombrePeluquero = "";
             if (random_peluquero < prob0)
             {
-                peluquero = "Aprendiz";
+                nombrePeluquero = "Aprendiz";
+                return nombrePeluquero;
             }
             else
             {
                 if (random_peluquero < (prob0 + prob1))
                 {
-                    peluquero = "Veterano A";
+                    nombrePeluquero = "Veterano A";
+                    return nombrePeluquero;
                 }
                 else
                 {
-                    peluquero = "Veterano B";
-
+                    nombrePeluquero = "Veterano B";
+                    return nombrePeluquero;
                 }
             }
-            
-            peluqueroSeleccionado = ListPeluquero.Find(x => x.nombre == peluquero);
         }
 
-        private double CalcularDemora(int tiempominimo,int tiempomaximo,double random)
+        private double CalcularDemora(double tiempominimo, double tiempomaximo, double random)
         {
-            return (demoraMinima + randomDemora * (demoraMaxima - demoraMinima));
+            return (tiempominimo + random * (tiempomaximo - tiempominimo));
         }
 
+        public double calcularPrimerLlegada()
+        {
+            demoraMinima = Convert.ToInt32(txtDemMinCliente.Text);   //del cliente
+            demoraMaxima = Convert.ToInt32(txtDemMaxCliente.Text);
+            randomDemoraCliente = rnd.NextDouble();
+            //randomDemoraPeluquero = rnd.NextDouble();
+            //Random_Matricula = rnd.NextDouble();
+            demoraCliente = CalcularDemora(demoraMinima, demoraMaxima, randomDemoraCliente);
+            proximaLlegada = (double)(demoraCliente + Reloj);
+            return proximaLlegada;
+            //contadorCliente++;
+        }
         private void Calcular_Tiempo_Entre_Llegada()
         {
-            ObtenerPeluquero();
-            demoraMinima = 2;   //del cliente
-            demoraMaxima = 12;
-            randomDemora = rnd.NextDouble();
+            //string nombrePeluquero = "";
+            //nombrePeluquero = ObtenerPeluquero();
+            demoraMinima = Convert.ToInt32(txtDemMinCliente.Text);   //del cliente
+            demoraMaxima = Convert.ToInt32(txtDemMaxCliente.Text);
+            randomDemoraCliente = rnd.NextDouble();
             randomDemoraPeluquero = rnd.NextDouble();
-            //Random_Matricula = rnd.NextDouble();
-            HoraProxLlegada = CalcularDemora(demoraMinima, demoraMaxima, randomDemora);
-            proximaLlegada = (double)(HoraProxLlegada + Reloj);
-            contadorCliente++;
-            if (peluqueroSeleccionado.estado == Estado.Libre) 
+            demoraCliente = CalcularDemora(demoraMinima, demoraMaxima, randomDemoraCliente);
+            proximaLlegada = (double)(demoraCliente + proximaLlegada);
+            //contadorCliente++;
+            //AsignarClienteAPeluquero(peluqueroSeleccionado, contadorCliente);
+        }
+        public void AsignarClienteAPeluquero(Peluquero seleccionado)
+        {
+            if (seleccionado.estado == "Libre")
             {
-                peluqueroSeleccionado.estado = Estado.Ocupado;
-                Tiempo_Atencion = CalcularDemora(peluqueroSeleccionado.demoraMinima,peluqueroSeleccionado.demoraMaxima, randomDemoraPeluquero);
+                seleccionado.estado = "Ocupado";
+                Tiempo_Atencion = CalcularDemora(seleccionado.demoraMinima, seleccionado.demoraMaxima, randomDemoraPeluquero);
+                listCliente.Add(new Cliente { /*numero = contadorCliente, */ estado = "Siendo Atendido", Peluquero = seleccionado.nombre, TiempoEspera = 0 });
+                seleccionado.tiempoAtencion = Tiempo_Atencion;
+                seleccionado.finTiempoAtencion = (Tiempo_Atencion + proximaLlegada);
             }
-            listCliente.Add(new Cliente { numero = contadorCliente, estado = Cliente.Estado.Esperando_Atencion, Peluquero = peluquero, TiempoEspera = 0, esta_en_cola = Cliente.EstaEnCola.No });
-            
+            else
+            {
+                seleccionado.cola++;
+                listCliente.Add(new Cliente { /*numero = contadorCliente, */estado = "Esperando Atencion", Peluquero = seleccionado.nombre, TiempoEspera = 0 });
+            }
         }
         public void cargarGrilla()
         {
-            dgv_simulaciones.Rows.Add(Evento, Math.Round((double)Reloj, 4), Math.Round(Random_Matricula, 4), Math.Round(Hora_Llegada_Matricula, 4), Math.Round(Random_Renovacion, 4), Math.Round(Hora_Llegada_Renovacion, 4)
-                , Math.Round(Proxima_Llegada, 4), Math.Round(Random_Tiempo_Atencion, 4), Fin_Tomas, Fin_Alicia, Fin_Lucia, Fin_Maria, Fin_Manuel
-                , Cola_Matricula, Estado_Tomas, Estado_Alicia, Cola_Renovacion, Estado_Lucia, Estado_Maria, Estado_Manuel);
-        }
-    
-
-        public void simulacion(double dias, double desde, double hasta)
-        {
-            
-            double reloj = 0;
-            double minutos = dias * 480;
-            double horadesde = desde * 60;
-            
-
-            /*
-            for (double i = reloj; i <= minutos; i++)
+            if (Evento=="Llegada Cliente")
             {
-                pide = "NO";
-
-                random_demanda = rnd.NextDouble();
-                BuscarDemanda();
-
-                if (llegada == i && semanas != 0)
-                {
-                    yaPidio = false;
-                    cantidadFalladas = 0;
-
-                    random_falla1 = rnd.NextDouble();
-                    random_falla2 = rnd.NextDouble();
-                    random_falla3 = rnd.NextDouble();
-                    random_falla4 = rnd.NextDouble();
-                    random_falla5 = rnd.NextDouble();
-                    random_falla6 = rnd.NextDouble();
-                    BuscarFalla(random_falla1, random_falla2, random_falla3, random_falla4, random_falla5, random_falla6);
-                    stock_Final = stock_Inicial + 6 - cantidadFalladas;
-
-                }
-                else
-                {
-                    stock_Final = stock_Inicial - demanda;
-                    if (stock_Final <= pRenovacion && yaPidio == false)
-                    {
-                        if (stock_Final < 0)
-                        {
-                            agotamiento = Math.Abs(stock_Final);
-                            stock_Final = 0;
-                            costoAgotamiento = agotamiento * cAgotamiento;
-                        }
-                        else { costoAgotamiento = 0; } //reseteo para el acumulado
-                        pide = "SI";
-                        costoPedido = cPedido;
-
-                        yaPidio = true;
-                        random_demora = rnd.NextDouble();
-                        BuscarDemora();
-                        llegada = i + demora;
-
-                    }
-                    else //VEER
-                    {
-                        costoPedido = 0; //reseteo para el acumulado
-                        if (stock_Final < 0)
-                        {
-                            agotamiento = Math.Abs(stock_Final);
-                            stock_Final = 0;
-                            costoAgotamiento = agotamiento * cAgotamiento;
-                        }
-                        else { costoAgotamiento = 0; } //reseteo para el acumulado
-                    }
-
-                    cantidadFalladas = 0; //reseteo para el acumulado
-                }
-                semanas = i;
-
-                costoTenencia = stock_Final * cTenencia;
-                costoTotal = costoTenencia + costoPedido + costoAgotamiento;
-                costoAcumulado += costoTotal;
-
-                if (semanas >= desde && semanas <= hasta)
-                {
-                    cargarGrilla(semanas);
-
-                }
-                if (semanas == experimentos && hasta != experimentos)
-                {
-                    cargarGrilla(semanas);
-                }
-                stock_Inicial = stock_Final;
-            }*/
-
-        }
-
-        public void GenerarTiempoProximaLlegada()
-        {
-            /*
-            RNDLlegadas = generadorLlegadas.NextDouble();
-            TiempoLlegadas = calcularDemora(txt, fila.RNDLlegadas);
-            ProximaLlegada = fila.Reloj + fila.TiempoLlegadas;
-            */
-        }
-        
-
-        public void BuscarPeluquero()
-        {
-            double prob0 = Convert.ToDouble(txtProbAprendiz.Text) / 100;
-            double prob1 = Convert.ToDouble(txtProbVetA.Text) / 100;
-            
-
-
-            if (random_peluquero < prob0)
-            {
-                peluquero = "Aprendiz";
+                dgv_simulaciones.Rows.Add(Evento, Math.Round((double)Reloj, 4), "NO", Math.Round(random_peluquero, 4), nombrePeluquero, Math.Round(random_llegada, 4)
+               , Tiempo_Entre_Llegada, Math.Round(Proxima_Llegada, 4));
             }
             else
             {
-                if (random_peluquero < (prob0 + prob1))
-                {
-                    peluquero = "Veterano A";
-                }
-                else
-                { 
-                        peluquero = "Veterano B";
-                                       
-                }
+                dgv_simulaciones.Rows.Add(Evento, Math.Round((double)Reloj, 4), "NO", "-", "-", "-"
+               , "-", "-");
             }
-
+            
         }
 
 
-        public void llegadaCliente()
+        private void Form1_Load(object sender, EventArgs e)
         {
-
+            ListPeluquero.Add(new Peluquero { nombre = "Aprendiz", estado = "Libre", finTiempoAtencion = null });
+            ListPeluquero.Add(new Peluquero { nombre = "Veterano A", estado = "Libre", finTiempoAtencion = null });
+            ListPeluquero.Add(new Peluquero { nombre = "Veterano B", estado = "Libre", finTiempoAtencion = null });
         }
-        public void finAtencionAprendiz()
-        {
-
-        }
-        public void finAtencionVetA()
-        {
-
-        }
-        public void finAtencionVetB()
-        {
-
-        }
-
-
     }
 }

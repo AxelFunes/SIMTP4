@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SIMTP4.Clases
 {
     public class Peluquero
-    {
+    {/*
         private string nombre;
         private double demoraMinima;
         private double demoraMaxima;
@@ -54,6 +54,6 @@ namespace SIMTP4.Clases
         {
             get { return finAtencion; }
             set { finAtencion = value; }
-        }
+        }*/
     }
 }
