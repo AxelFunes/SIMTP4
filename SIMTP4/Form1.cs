@@ -81,6 +81,10 @@ namespace SIMTP4
         private double acumOcupacionAprendiz;
         private int idClienteAtendido;
         private int contadorCliente;
+        private string supera8hs;
+
+        private double desde;
+        private double hasta;
 
         //Variables para Llegada de Proximo Cliente
         double randomDemoraCliente;
@@ -128,17 +132,20 @@ namespace SIMTP4
             {
 
                 dias = Convert.ToInt32(txtTiempoSimulacion.Text);//cant de dias a simular
-                                                                 //Variable_3 = true; Ver que hace
+                                                            //Variable_3 = true; Ver que hace
 
+                desde = Convert.ToDouble(txt_desde.Text);
+                hasta = desde + Convert.ToDouble(txt_desde.Text);
 
                 for (int i = 0; i < dias; i++)
                 {
+                    
                     Simulacion_Cero();
                     while (Reloj < 480)
                     {
                         Comenzar();
                     }
-                    if (cantClientesEnCola > 0)
+                    while (cantClientesEnCola > 0)
                     {
                         Comenzar();
                     }
@@ -168,8 +175,8 @@ namespace SIMTP4
             //ObtenerPeluquero();
             Elegir_Menor_Para_Proximo_Evento();
             Reloj = Menor_Hora_Proximo_Evento;
-            CancelacionCliente();
-            TotalCLientesCola();
+            //CancelacionCliente();
+            //TotalCLientesCola();
             if (Reloj < 480)
             {
                 if (Evento == "Llegada Cliente")
@@ -188,7 +195,7 @@ namespace SIMTP4
                     Calcular_Tiempo_Entre_Llegada();
 
                     //CancelacionCliente();
-                    cargarGrilla();
+                    //cargarGrilla();
                     contadorCliente++;
                 }
                 else /*if (Evento == "Fin Atencion")*/
@@ -208,10 +215,38 @@ namespace SIMTP4
 
                                 foreach (var cliente in listCliente)
                                 {
-                                    if (cliente.estado == "Esperando Atencion" && cliente.Peluquero == peluquero.nombre)
+                                    //if (cliente.estado == "Siendo Atendido" && peluquero.idCliente == cliente.numero)
+                                    //{
+                                    //    cliente.estado = "Cancelado";
+                                    //}
+                                    if (cliente.estado == "Siendo Atendido" && cliente.Peluquero == peluquero.nombre)
                                     {
-                                        AsignarClienteAPeluquero(peluquero);
-
+                                        cliente.estado = "Desocupado";
+                                        peluquero.estado = "Libre";
+                                        idClienteAtendido = peluquero.idCliente;
+                                    }
+                                    if (cliente.estado == "Esperando Atencion" && cliente.Peluquero == peluquero.nombre && peluquero.estado == "Libre")
+                                    {
+                                        cliente.estado = "Siendo Atendido";
+                                        peluquero.estado = "Ocupado";
+                                        Tiempo_Atencion = CalcularDemora(peluquero.demoraMinima, peluquero.demoraMaxima, randomDemoraPeluquero);
+                                        cliente.TiempoEspera = 0;
+                                        peluquero.tiempoAtencion = Tiempo_Atencion;
+                                        peluquero.finTiempoAtencion = (Tiempo_Atencion + Reloj);
+                                        peluquero.idCliente = contadorCliente;
+                                        if (nombrePeluquero == "Aprendiz")
+                                        {
+                                            random_atencionAprendiz = randomDemoraPeluquero;
+                                            finAprendiz = Tiempo_Atencion + Reloj;
+                                            acumOcupacionAprendiz += Tiempo_Atencion;
+                                        }
+                                        else if (nombrePeluquero == "Veterano A")
+                                        {
+                                            random_atencionVetA = randomDemoraPeluquero;
+                                            finVeteranoA = Tiempo_Atencion + Reloj;
+                                        }
+                                        else { random_atencionVetB = randomDemoraPeluquero; finVeteranoB = Tiempo_Atencion + Reloj; }
+                                        //AsignarClienteAPeluquero(peluquero);
                                         break;
                                     }
                                 }
@@ -226,18 +261,28 @@ namespace SIMTP4
                                 peluquero.tiempoAtencion = 0;
                                 peluquero.finTiempoAtencion = null;
                                 peluquero.estado = "Libre";
+                                foreach (var cliente in listCliente)
+                                {
+                                    if (cliente.estado == "Siendo Atendido" && cliente.Peluquero == peluquero.nombre)
+                                    {
+                                        cliente.estado = "Desocupado";
+                                        peluquero.estado = "Libre";
+                                        idClienteAtendido = peluquero.idCliente;
+                                    }break;
+                                }
                                 idClienteAtendido = peluquero.idCliente;
                                 break;
                             }
                         }
                     }
-                    cargarGrilla();
+                    //cargarGrilla();
                 }
 
-
+                //cargarGrilla();
             }
             else if (Reloj > 480)
             {
+                supera8hs = "Si";
                 foreach (var peluquero in ListPeluquero)
                 {
                     if (peluquero.finTiempoAtencion == Menor_Hora_Proximo_Evento)
@@ -252,16 +297,45 @@ namespace SIMTP4
 
                             foreach (var cliente in listCliente)
                             {
+                                //if (cliente.estado == "Siendo Atendido" && peluquero.idCliente == cliente.numero)
+                                //{
+                                //    cliente.estado = "Cancelado";
+                                //}
+                                if (cliente.estado == "Siendo Atendido" && cliente.Peluquero == peluquero.nombre)
+                                {
+                                    cliente.estado = "Desocupado";
+                                    peluquero.estado = "Libre";
+                                    idClienteAtendido = peluquero.idCliente;
+                                }
                                 if (cliente.estado == "Esperando Atencion" && cliente.Peluquero == peluquero.nombre)
                                 {
-                                    AsignarClienteAPeluquero(peluquero);
-                                    break;
+                                    cliente.estado = "Siendo Atendido";
+                                    peluquero.estado = "Ocupado";
+                                    Tiempo_Atencion = CalcularDemora(peluquero.demoraMinima, peluquero.demoraMaxima, randomDemoraPeluquero);
+                                    cliente.TiempoEspera = 0;
+                                    peluquero.tiempoAtencion = Tiempo_Atencion;
+                                    peluquero.finTiempoAtencion = (Tiempo_Atencion + Reloj);
+                                    peluquero.idCliente = contadorCliente;
+                                    if (nombrePeluquero == "Aprendiz")
+                                    {
+                                        random_atencionAprendiz = randomDemoraPeluquero;
+                                        finAprendiz = Tiempo_Atencion + Reloj;
+                                        acumOcupacionAprendiz += Tiempo_Atencion;
+                                    }
+                                    else if (nombrePeluquero == "Veterano A")
+                                    {
+                                        random_atencionVetA = randomDemoraPeluquero;
+                                        finVeteranoA = Tiempo_Atencion + Reloj;
+                                    }
+                                    else { random_atencionVetB = randomDemoraPeluquero; finVeteranoB = Tiempo_Atencion + Reloj; }
+                                    //AsignarClienteAPeluquero(peluquero);
+                                    //break;
                                 }
                             }
                             //clientePelu = listCliente.First(x => x.Peluquero == peluquero.nombre && x.estado == "Esperando Atencion");
                             //clientePelu.estado = "Siendo Atendido";
                             idClienteAtendido = peluquero.idCliente;
-                            break;
+                            //break;
                         }
                         else
                         {
@@ -275,8 +349,15 @@ namespace SIMTP4
 
                 }
 
+                //cargarGrilla();
+            }
+            if (true)
+            {
                 cargarGrilla();
             }
+            
+            CancelacionCliente();
+            TotalCLientesCola();
         }
         public void TotalCLientesCola()
         {
@@ -293,11 +374,15 @@ namespace SIMTP4
 
         public void CancelacionCliente()
         {
-
             string nomPeluca = "";
             foreach (var cliente in listCliente)
             {
-                if (cliente.TiempoEspera >= 30 && cliente.estado=="Esperando Atencion")
+                if (cliente.estado == "Esperando Atencion")
+                {
+                    cliente.TiempoEspera = (Reloj - cliente.horaLlegada);
+                }
+
+                else if (cliente.TiempoEspera >= 30 && cliente.estado == "Esperando Atencion")
                 {
                     cliente.estado = "Cancelado";
                     nomPeluca = cliente.Peluquero;
@@ -310,10 +395,11 @@ namespace SIMTP4
                         break;
                     }
                 }
-                else
-                {
-                    cliente.TiempoEspera = (Reloj - cliente.horaLlegada);
-                }
+                //if (cliente.estado == "Cancelado")
+                //{
+                //    //listCliente.Remove(cliente);
+                //    //listCliente.RemoveAt(cliente.numero);
+                //}
             }
         }
         public void Elegir_Menor_Para_Proximo_Evento()
@@ -323,7 +409,7 @@ namespace SIMTP4
             if (menorTiempoFin != null)
             {
                 //if (proximaLlegada > menorTiempoFin)
-                if (menorTiempoFin < proximaLlegada || proximaLlegada > 480)
+                if (menorTiempoFin < proximaLlegada || Reloj > 480)
                 {
                     Menor_Hora_Proximo_Evento = menorTiempoFin;
                     Evento = "Fin Atencion";
@@ -345,6 +431,11 @@ namespace SIMTP4
 
         private void Simulacion_Cero()
         {
+            Menor_Hora_Proximo_Evento = 0;
+            menorTiempoFin = 0;
+            proximaLlegada = 0;
+            
+            supera8hs = "No";
             contadorCliente = 1;
             idClienteAtendido = 1;
             acumOcupacionAprendiz = 0;
@@ -424,7 +515,7 @@ namespace SIMTP4
             randomDemoraCliente = rnd.NextDouble();
             //randomDemoraPeluquero = rnd.NextDouble();
             demoraCliente = CalcularDemora(demoraMinima, demoraMaxima, randomDemoraCliente);
-            proximaLlegada = (double)(demoraCliente + proximaLlegada);
+            proximaLlegada = (double)(demoraCliente + Reloj);
             //contadorCliente++;
             //AsignarClienteAPeluquero(peluqueroSeleccionado, contadorCliente);
         }
@@ -444,6 +535,7 @@ namespace SIMTP4
                 {
                     random_atencionAprendiz = randomDemoraPeluquero;
                     finAprendiz = Tiempo_Atencion + Reloj;
+                    acumOcupacionAprendiz += Tiempo_Atencion;
                 }
                 else if (nombrePeluquero == "Veterano A")
                 {
@@ -455,7 +547,7 @@ namespace SIMTP4
             else
             {
                 seleccionado.cola++;
-                listCliente.Add(new Cliente { numero = contadorCliente, estado = "Esperando Atencion", Peluquero = seleccionado.nombre, TiempoEspera = 0 });
+                listCliente.Add(new Cliente { numero = contadorCliente, estado = "Esperando Atencion", Peluquero = seleccionado.nombre, TiempoEspera = 0, horaLlegada = Reloj });
             }
 
         }
@@ -463,18 +555,18 @@ namespace SIMTP4
         {
             if (Evento == "Inicializacion")
             {
-                dgv_simulaciones.Rows.Add("Inicializacion", "0", "NO", "-", "-", "-"
+                dgv_simulaciones.Rows.Add("Inicializacion", "0", supera8hs, "-", "-", "-"
                , "-", "-");
             }
             else if (Evento == "Llegada Cliente")
             {
-                dgv_simulaciones.Rows.Add(Evento + "(" + contadorCliente + ")", Math.Round((double)Reloj, 4), "NO", Math.Round(random_peluquero, 4), nombrePeluquero, Math.Round(random_llegada, 4)
-               , demoraCliente, Math.Round(proximaLlegada, 4), "", "", Math.Round(random_atencionAprendiz, 4), ObtenerTiempoAtencion("Aprendiz"), finAprendiz, Math.Round(random_atencionVetA, 4), ObtenerTiempoAtencion("Veterano A"), finVeteranoA, Math.Round(random_atencionVetB, 4), ObtenerTiempoAtencion("Veterano B"), finVeteranoB, ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("Veterano A"), ObtenerColaPeluquero("Veterano A"), ObtenerEstadoPeluquero("Veterano B"), ObtenerColaPeluquero("Veterano B"), "", cantMasAltaDeClientesCola);
+                dgv_simulaciones.Rows.Add(Evento + "(" + contadorCliente + ")", Math.Round((double)Reloj, 4), supera8hs, Math.Round(random_peluquero, 4), nombrePeluquero, Math.Round(random_llegada, 4)
+               , demoraCliente, Math.Round(proximaLlegada, 4), "", "", Math.Round(random_atencionAprendiz, 4), ObtenerTiempoAtencion("Aprendiz"), finAprendiz, Math.Round(random_atencionVetA, 4), ObtenerTiempoAtencion("Veterano A"), finVeteranoA, Math.Round(random_atencionVetB, 4), ObtenerTiempoAtencion("Veterano B"), finVeteranoB, ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("Veterano A"), ObtenerColaPeluquero("Veterano A"), ObtenerEstadoPeluquero("Veterano B"), ObtenerColaPeluquero("Veterano B"), Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
             }
             else
             {
-                dgv_simulaciones.Rows.Add(Evento + "(" + idClienteAtendido + ")", Math.Round((double)menorTiempoFin, 4), "NO", "-", "-", "-"
-               , "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("Veterano A"), ObtenerColaPeluquero("Veterano A"), ObtenerEstadoPeluquero("Veterano B"), ObtenerColaPeluquero("Veterano B"), "", cantMasAltaDeClientesCola);
+                dgv_simulaciones.Rows.Add(Evento, Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
+               , "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("Veterano A"), ObtenerColaPeluquero("Veterano A"), ObtenerEstadoPeluquero("Veterano B"), ObtenerColaPeluquero("Veterano B"), Math.Round(acumOcupacionAprendiz,4), cantMasAltaDeClientesCola);
             }
 
         }
