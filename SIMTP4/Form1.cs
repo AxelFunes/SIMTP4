@@ -85,7 +85,7 @@ namespace SIMTP4
 
         private double desde;
         private double hasta;
-        private int contadorIteraciones = 0;
+        private double contadorIteraciones = 0;
 
         //Variables para Llegada de Proximo Cliente
         double randomDemoraCliente;
@@ -129,6 +129,8 @@ namespace SIMTP4
             double hasta = Convert.ToDouble(txt_hasta.Text);
 
             simulacion(dias, desde, hasta);*/
+            listCliente.Clear();
+            dgv_simulaciones.Rows.Clear();
             if (txtTiempoSimulacion.Text != "") //faltan validaciones
             {
 
@@ -154,6 +156,7 @@ namespace SIMTP4
                     //contadorIteraciones = 0;
                     //Comenzar();
                     //cargarGrilla();
+                    listCliente.Clear();
                 }
                 dgv_simulaciones.Rows.Add("Ultima Iteracion", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
                 /*
@@ -222,6 +225,7 @@ namespace SIMTP4
                                     //{
                                     //    cliente.estado = "Cancelado";
                                     //}
+
                                     if (cliente.estado == "Siendo Atendido" && cliente.Peluquero == peluquero.nombre)
                                     {
                                         cliente.estado = "Desocupado";
@@ -363,7 +367,7 @@ namespace SIMTP4
                 }
                 
             }
-            
+            //cargarGrilla();
             CancelacionCliente();
             TotalCLientesCola();
         }
@@ -448,6 +452,7 @@ namespace SIMTP4
             contadorCliente = 1;
             idClienteAtendido = 1;
             acumOcupacionAprendiz = 0;
+            
             listCliente.Clear();
             //cantClientesEnCola=0;
             //ObtenerPeluquero();
@@ -461,7 +466,9 @@ namespace SIMTP4
                 item.estado = "Libre";
                 item.finTiempoAtencion = null;
                 item.cola = 0;
-                item.idCliente = 0;
+                
+                item.tiempoAtencion = 0;
+
             }
 
 
