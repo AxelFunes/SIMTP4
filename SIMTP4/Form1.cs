@@ -85,6 +85,7 @@ namespace SIMTP4
 
         private double desde;
         private double hasta;
+        private int contadorIteraciones = 0;
 
         //Variables para Llegada de Proximo Cliente
         double randomDemoraCliente;
@@ -135,7 +136,7 @@ namespace SIMTP4
                                                             //Variable_3 = true; Ver que hace
 
                 desde = Convert.ToDouble(txt_desde.Text);
-                hasta = desde + Convert.ToDouble(txt_desde.Text);
+                hasta = Convert.ToDouble(txt_hasta.Text);
 
                 for (int i = 0; i < dias; i++)
                 {
@@ -150,9 +151,11 @@ namespace SIMTP4
                         Comenzar();
                     }
                     Reloj = 0;
+                    //contadorIteraciones = 0;
                     //Comenzar();
                     //cargarGrilla();
                 }
+                dgv_simulaciones.Rows.Add("Ultima Iteracion", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
                 /*
                 if (Variable_3 == true)
                 {
@@ -351,9 +354,14 @@ namespace SIMTP4
 
                 //cargarGrilla();
             }
-            if (true)
+            if (Reloj >= desde)
             {
-                cargarGrilla();
+                contadorIteraciones++;
+                if (contadorIteraciones<= hasta)
+                {
+                    cargarGrilla();
+                }
+                
             }
             
             CancelacionCliente();
@@ -434,12 +442,14 @@ namespace SIMTP4
             Menor_Hora_Proximo_Evento = 0;
             menorTiempoFin = 0;
             proximaLlegada = 0;
-            
+            contadorIteraciones = 0;
+
             supera8hs = "No";
             contadorCliente = 1;
             idClienteAtendido = 1;
             acumOcupacionAprendiz = 0;
             listCliente.Clear();
+            //cantClientesEnCola=0;
             //ObtenerPeluquero();
             calcularPrimerLlegada();
 
