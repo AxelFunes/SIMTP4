@@ -482,7 +482,9 @@ namespace SIMTP4
         }
         public void Elegir_Menor_Para_Proximo_Evento()
         {
-            menorTiempoFin = listaPeluquero.Min(x => x.finTiempoAtencion);
+            
+
+            menorTiempoFin = BuscarMinimo(listaPeluquero);//listaPeluquero.Min(x => x.finTiempoAtencion);
 
             if (menorTiempoFin != 0)
             {
@@ -507,6 +509,18 @@ namespace SIMTP4
 
         }
 
+        public double BuscarMinimo(List<Peluquero> listapeluquero)
+        {
+            double minVal = double.MaxValue;
+            foreach (var i in listapeluquero)
+            {
+                if (i.finTiempoAtencion < minVal && i.finTiempoAtencion!=0)
+                {
+                    minVal = i.finTiempoAtencion;
+                }
+            }
+            return minVal;
+        }
         private void Simulacion_Cero()
         {
             Menor_Hora_Proximo_Evento = 0;
