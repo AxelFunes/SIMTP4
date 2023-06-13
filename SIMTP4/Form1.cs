@@ -91,7 +91,10 @@ namespace SIMTP4
         private double menorTiempoFin;
         private int contadorClienteAtendido;
         private bool colasVacias = false;
-        private bool banderaDeColaAatencion=false; 
+        private bool banderaDeColaAatencion = false;
+        private int diaActual;
+        private int diaArranque;
+        bool yaArranco=false;
 
         private double desde;
         private double hasta;
@@ -137,86 +140,89 @@ namespace SIMTP4
             simulacion(dias, desde, hasta);*/
             listaCliente.Clear();
             dgv_simulaciones.Rows.Clear();
-            try
-            {
-                if (txtTiempoSimulacion.Text != "") //faltan validaciones
-                {
 
+            if (txtTiempoSimulacion.Text != "") //faltan validaciones
+            {
+                try
+                {
                     dias = Convert.ToInt32(txtTiempoSimulacion.Text);//cant de dias a simular
                                                                      //Variable_3 = true; Ver que hace
-
+                    diaArranque= Convert.ToInt32(txtDiaArranque.Text);
                     desde = Convert.ToDouble(txt_desde.Text);
                     hasta = Convert.ToDouble(txt_hasta.Text);
                     acumOcupacionAprendiz = 0;
-                    for (int i = 0; i < dias; i++)
+                    if (contadorIteracionesTotales <= 100000)
                     {
-                        if (contadorIteracionesTotales <= 100000)
+                        for (int i = 0; i < dias; i++)
                         {
-                            Simulacion_Cero();
-                        }
-                        
-                        contadorIteracionesTotales++;
-                        if (Reloj < 480 && contadorIteracionesTotales <= 100000)
-                        {
-                            while (Reloj < 480)
+                            diaActual = i+1;
+                            if (contadorIteracionesTotales <= 100000 && diaActual>=diaArranque && contadorIteraciones <= hasta)
                             {
-                                Comenzar();
-                                contadorIteracionesTotales++;
-                            }
-                        }
-                        //while (Reloj < 480)
-                        //{
-                        //    Comenzar();
-                        //    contadorIteraciones++;
-                        //}
-                        if (Reloj > 480 && contadorIteracionesTotales <= 100000)
-                        {
-                            while (colasVacias == false)
-                            {
-                                finAtencionOchoHoras();
-                                contadorIteracionesTotales++;
+                                Simulacion_Cero();
                             }
 
-                        }
+                            contadorIteracionesTotales++;
+                            if (Reloj < 480 && contadorIteracionesTotales <= 100000)
+                            {
+                                while (Reloj < 480)
+                                {
+                                    Comenzar();
+                                    contadorIteracionesTotales++;
+                                }
+                            }
+                            //while (Reloj < 480)
+                            //{
+                            //    Comenzar();
+                            //    contadorIteraciones++;
+                            //}
+                            if (Reloj > 480 && contadorIteracionesTotales <= 100000)
+                            {
+                                while (colasVacias == false)
+                                {
+                                    finAtencionOchoHoras();
+                                    contadorIteracionesTotales++;
+                                }
 
-                        //while (cantClientesEnCola > 0)
-                        //{
-                        //    Comenzar();
-                        //    contadorIteraciones++;
-                        //}
-                        Reloj = 0;
-                        //contadorIteraciones = 0;
-                        //Comenzar();
-                        //cargarGrilla();
-                        //listaCliente.Clear();
+                            }
+
+                            //while (cantClientesEnCola > 0)
+                            //{
+                            //    Comenzar();
+                            //    contadorIteraciones++;
+                            //}
+                            Reloj = 0;
+                            //contadorIteraciones = 0;
+                            //Comenzar();
+                            //cargarGrilla();
+                            //listaCliente.Clear();
+
+                        }
+                        dgv_simulaciones.Rows.Add("Ultima Iteracion", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
+                        /*
+                        if (Variable_3 == true)
+                        {
+                            foreach (var item in listCliente)
+                            {
+                                dgv_Clientes.Rows.Add(item.numero, item.estado, item.Servidor, item.Tipo_Cliente, item.TiempoEspera, item.esta_en_cola);
+                            }
+                        }*/
 
                     }
-                    dgv_simulaciones.Rows.Add("Ultima Iteracion", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
-                    /*
-                    if (Variable_3 == true)
+                    else
                     {
-                        foreach (var item in listCliente)
-                        {
-                            dgv_Clientes.Rows.Add(item.numero, item.estado, item.Servidor, item.Tipo_Cliente, item.TiempoEspera, item.esta_en_cola);
-                        }
-                    }*/
-
+                        MessageBox.Show("Coloque valores en la celda Simular");
+                    }
                 }
-                else
+                catch (Exception x)
                 {
-                    MessageBox.Show("Coloque valores en la celda Simular");
+                    MessageBox.Show(x.Message);
                 }
-            }
-            catch (Exception x)
-            {
-                MessageBox.Show(x.Message);
             }
         }
-
         private void Comenzar()
         {
             //ObtenerPeluquero();
-            //Elegir_Menor_Para_Proximo_Evento();
+            Elegir_Menor_Para_Proximo_Evento();
             Reloj = Menor_Hora_Proximo_Evento;
             //CancelacionCliente();
             //TotalCLientesCola();
@@ -238,7 +244,18 @@ namespace SIMTP4
                     Calcular_Tiempo_Entre_Llegada();
 
                     //CancelacionCliente();
-                    cargarGrilla();
+                    //nuevo
+                    if ((Reloj >= desde || yaArranco) && diaActual >= diaArranque)
+                    {
+                        yaArranco = true;
+                        contadorIteraciones++;
+                        if (contadorIteraciones <= hasta)
+                        {
+                            cargarGrilla();
+                        }
+                    }
+                    //finnuevo
+                    //cargarGrilla();
                     contadorCliente++;
                 }
                 else if (Evento == "Fin Atencion")
@@ -247,7 +264,28 @@ namespace SIMTP4
                     {
                         if (peluquero.finTiempoAtencion == Menor_Hora_Proximo_Evento)
                         {
-                            if (peluquero.cola > 0)
+                            if (peluquero.cola == 0)
+                            {
+                                peluquero.tiempoAtencion = 0;
+                                peluquero.finTiempoAtencion = 0;
+                                peluquero.estado = Peluquero.Estado.Libre;
+                                foreach (var cliente in listaCliente)
+                                {
+                                    if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
+                                    {
+
+                                        //listaCliente.Remove(cliente);
+                                        cliente.estado = Cliente.Estado.Desocupado;
+                                        //peluquero.estado = Peluquero.Estado.Libre;
+                                        contadorClienteAtendido = cliente.numero;
+                                        //idClienteAtendido = peluquero.idCliente;
+                                    }
+
+                                }
+                                //idClienteAtendido = peluquero.idCliente;
+                                //break;
+                            }
+                            else /*(peluquero.cola > 0)*/
                             {
                                 peluquero.cola--;
                                 peluquero.estado = Peluquero.Estado.Libre;
@@ -303,7 +341,7 @@ namespace SIMTP4
                                             random_atencionVetA = randomDemoraPeluquero;
                                             finAtencionVeteranoA = Tiempo_Atencion + Reloj;
                                         }
-                                        else { random_atencionVetB = randomDemoraPeluquero; finAtencionVeteranoB = Tiempo_Atencion + Reloj; }
+                                        else if (nombrePeluquero == "VeteranoB") { random_atencionVetB = randomDemoraPeluquero; finAtencionVeteranoB = Tiempo_Atencion + Reloj; }
                                         //AsignarClienteAPeluquero(peluquero);
                                         break;
                                     }
@@ -315,48 +353,59 @@ namespace SIMTP4
                                 //idClienteAtendido = peluquero.idCliente;
                                 //break;
                             }
-                            else if (peluquero.cola == 0)
-                            {
-                                peluquero.tiempoAtencion = 0;
-                                peluquero.finTiempoAtencion = 0;
-                                peluquero.estado = Peluquero.Estado.Libre;
-                                foreach (var cliente in listaCliente)
-                                {
-                                    if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
-                                    {
-                                        
-                                        //listaCliente.Remove(cliente);
-                                        cliente.estado = Cliente.Estado.Desocupado;
-                                        //peluquero.estado = Peluquero.Estado.Libre;
-                                        contadorClienteAtendido = cliente.numero;
-                                        //idClienteAtendido = peluquero.idCliente;
-                                    }
-                                    break;
-                                }
-                                //idClienteAtendido = peluquero.idCliente;
-                                //break;
-                            }
+                            //elseif (peluquero.cola == 0)
+                            //{
+                            //    peluquero.tiempoAtencion = 0;
+                            //    peluquero.finTiempoAtencion = 0;
+                            //    peluquero.estado = Peluquero.Estado.Libre;
+                            //    foreach (var cliente in listaCliente)
+                            //    {
+                            //        if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
+                            //        {
+
+                            //            //listaCliente.Remove(cliente);
+                            //            cliente.estado = Cliente.Estado.Desocupado;
+                            //            //peluquero.estado = Peluquero.Estado.Libre;
+                            //            contadorClienteAtendido = cliente.numero;
+                            //            //idClienteAtendido = peluquero.idCliente;
+                            //        }
+                            //        break;
+                            //    }
+                            //    //idClienteAtendido = peluquero.idCliente;
+                            //    //break;
+                            //}
                         }
                     }
-                    cargarGrilla();
+                    //nuevo
+                    if ((Reloj >= desde || yaArranco) && diaActual >= diaArranque)
+                    {
+                        yaArranco = true;
+                        contadorIteraciones++;
+                        if (contadorIteraciones <= hasta)
+                        {
+                            cargarGrilla();
+                        }
+                    }
+                    //finnuevo
+                    //cargarGrilla();
                     banderaDeColaAatencion = false;
                 }
 
                 //cargarGrilla();
                 //}
-                //if (Reloj >= desde)
+                //if ((Reloj >= desde|| yaArranco) && diaActual>= diaArranque)
                 //{
+                //    yaArranco = true;
                 //    contadorIteraciones++;
                 //    if (contadorIteraciones <= hasta)
                 //    {
                 //        cargarGrilla();
                 //    }
-
                 //}
-                //cargarGrilla();
-                Elegir_Menor_Para_Proximo_Evento();
-                CancelacionCliente();
-                TotalCLientesCola();
+                    //cargarGrilla();
+                    //Elegir_Menor_Para_Proximo_Evento();
+                    //CancelacionCliente();
+                    TotalCLientesCola();
             }
         }
 
@@ -369,11 +418,33 @@ namespace SIMTP4
             {
                 if (peluquero.finTiempoAtencion == Menor_Hora_Proximo_Evento)
                 {
-                    if (peluquero.cola > 0)
+                    if (peluquero.cola == 0)
+                    {
+                        peluquero.tiempoAtencion = 0;
+                        peluquero.finTiempoAtencion = 0;
+                        peluquero.estado = Peluquero.Estado.Libre;
+                        foreach (var cliente in listaCliente)
+                        {
+
+                            if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
+                            {
+
+                                cliente.estado = Cliente.Estado.Desocupado;
+                                //peluquero.estado = Peluquero.Estado.Libre;
+                                contadorClienteAtendido = cliente.numero;
+                                //listaCliente.Remove(cliente);
+                                //idClienteAtendido = peluquero.idCliente;
+                            }
+
+                        }
+
+                        //break;
+                    }
+                    else//if (peluquero.cola > 0)
                     {
                         peluquero.cola--;
                         peluquero.estado = Peluquero.Estado.Libre;
-                        
+
                         peluquero.tiempoAtencion = 0;
                         peluquero.finTiempoAtencion = 0;
 
@@ -402,8 +473,9 @@ namespace SIMTP4
                                 //peluquero.finTiempoAtencion = 0;
                                 //listaCliente.Remove(cliente);
                                 //idClienteAtendido = peluquero.idCliente;
+                                break;
                             }
-                            if (cliente.estado == Cliente.Estado.EsperandoAtencion && cliente.Peluquero == peluquero.nombre.ToString() && peluquero.estado == Peluquero.Estado.Libre) 
+                            if (cliente.estado == Cliente.Estado.EsperandoAtencion && cliente.Peluquero == peluquero.nombre.ToString() && peluquero.estado == Peluquero.Estado.Libre)
                             {
                                 //peluquero.cola--;
                                 cliente.estado = Cliente.Estado.SiendoAtendido;
@@ -412,7 +484,7 @@ namespace SIMTP4
                                 cliente.TiempoEspera = 0;
                                 peluquero.tiempoAtencion = Tiempo_Atencion;
                                 peluquero.finTiempoAtencion = (Tiempo_Atencion + Reloj);
-                                //peluquero.idCliente = contadorCliente;
+                                banderaDeColaAatencion = true;
                                 if (nombrePeluquero == "Aprendiz")
                                 {
                                     random_atencionAprendiz = randomDemoraPeluquero;
@@ -424,7 +496,7 @@ namespace SIMTP4
                                     random_atencionVetA = randomDemoraPeluquero;
                                     finAtencionVeteranoA = Tiempo_Atencion + Reloj;
                                 }
-                                else { random_atencionVetB = randomDemoraPeluquero; finAtencionVeteranoB = Tiempo_Atencion + Reloj; }
+                                else if (nombrePeluquero == "VeteranoB") { random_atencionVetB = randomDemoraPeluquero; finAtencionVeteranoB = Tiempo_Atencion + Reloj; }
                                 //AsignarClienteAPeluquero(peluquero);
                                 break;
                             }
@@ -434,28 +506,28 @@ namespace SIMTP4
                         //idClienteAtendido = peluquero.idCliente;
                         //break;
                     }
-                    else if (peluquero.cola == 0)
-                    {
-                        peluquero.tiempoAtencion = 0;
-                        peluquero.finTiempoAtencion = 0;
-                        peluquero.estado = Peluquero.Estado.Libre;
-                        foreach (var cliente in listaCliente)
-                        {
+                    //else /*if (peluquero.cola == 0)*/
+                    //{
+                    //    peluquero.tiempoAtencion = 0;
+                    //    peluquero.finTiempoAtencion = 0;
+                    //    peluquero.estado = Peluquero.Estado.Libre;
+                    //    foreach (var cliente in listaCliente)
+                    //    {
 
-                            if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
-                            {
-                                
-                                cliente.estado = Cliente.Estado.Desocupado;
-                                //peluquero.estado = Peluquero.Estado.Libre;
-                                contadorClienteAtendido = cliente.numero;
-                                //listaCliente.Remove(cliente);
-                                //idClienteAtendido = peluquero.idCliente;
-                            }
-                            break;
-                        }
+                    //        if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
+                    //        {
 
-                        //break;
-                    }
+                    //            cliente.estado = Cliente.Estado.Desocupado;
+                    //            //peluquero.estado = Peluquero.Estado.Libre;
+                    //            contadorClienteAtendido = cliente.numero;
+                    //            //listaCliente.Remove(cliente);
+                    //            //idClienteAtendido = peluquero.idCliente;
+                    //        }
+                    //        break;
+                    //    }
+
+                    //    //break;
+                    //}
                 }
 
             }
@@ -471,9 +543,20 @@ namespace SIMTP4
             //    }
 
             //}
-            cargarGrilla();
-
-            CancelacionCliente();
+            //nuevo
+            if ((Reloj >= desde || yaArranco) && diaActual >= diaArranque)
+            {
+                yaArranco = true;
+                contadorIteraciones++;
+                if (contadorIteraciones <= hasta)
+                {
+                    cargarGrilla();
+                }
+            }
+            //finnuevo
+            //cargarGrilla();
+            banderaDeColaAatencion = false;
+            //CancelacionCliente();
             TotalCLientesCola();
             diaTerminado();
         }
@@ -591,7 +674,7 @@ namespace SIMTP4
             Menor_Hora_Proximo_Evento = 0;
             menorTiempoFin = 0;
             Proxima_Llegada = 0;
-            contadorIteraciones = 1;
+            //contadorIteraciones = 1;
             colasVacias = false;
             supera8hs = "No";
             contadorCliente = 1;
@@ -701,7 +784,8 @@ namespace SIMTP4
                     random_atencionVetA = randomDemoraPeluquero;
                     finAtencionVeteranoA = Tiempo_Atencion + Reloj;
                 }
-                else { random_atencionVetB = randomDemoraPeluquero; finAtencionVeteranoB = Tiempo_Atencion + Reloj; }
+                else if (nombrePeluquero == "VeteranoB") 
+                    { random_atencionVetB = randomDemoraPeluquero; finAtencionVeteranoB = Tiempo_Atencion + Reloj; }
             }
             else
             {
@@ -714,7 +798,7 @@ namespace SIMTP4
         {
             if (Evento == "Inicializacion")
             {
-                dgv_simulaciones.Rows.Add("Inicializacion", "0", supera8hs, "-", "-", "-"
+                dgv_simulaciones.Rows.Add("Inicializacion: Dia "+diaActual, "0", supera8hs, "-", "-", "-"
                , "-", "-");
             }
             else if (Evento == "Llegada Cliente")
@@ -722,29 +806,30 @@ namespace SIMTP4
                 dgv_simulaciones.Rows.Add(Evento + "(" + contadorCliente + ")", Math.Round((double)Reloj, 4), supera8hs, Math.Round(random_peluquero, 4), nombrePeluquero, Math.Round(random_llegada, 4)
                , demoraCliente, Math.Round(Proxima_Llegada, 4), "", "", Math.Round(random_atencionAprendiz, 4), ObtenerTiempoAtencion("Aprendiz"), finAtencionAprendiz, Math.Round(random_atencionVetA, 4), ObtenerTiempoAtencion("VeteranoA"), finAtencionVeteranoA, Math.Round(random_atencionVetB, 4), ObtenerTiempoAtencion("VeteranoB"), finAtencionVeteranoB, ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("VeteranoA"), ObtenerColaPeluquero("VeteranoA"), ObtenerEstadoPeluquero("VeteranoB"), ObtenerColaPeluquero("VeteranoB"), Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
             }
-            else if (Evento == "Fin Atencion" && banderaDeColaAatencion==false)
+            else if (Evento == "Fin Atencion" && banderaDeColaAatencion == false)
             {
-                dgv_simulaciones.Rows.Add(Evento + "(" + contadorClienteAtendido + ")", Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
+                dgv_simulaciones.Rows.Add(Evento /*+ "(" + contadorClienteAtendido + ")"*/, Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
                , "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("VeteranoA"), ObtenerColaPeluquero("VeteranoA"), ObtenerEstadoPeluquero("VeteranoB"), ObtenerColaPeluquero("VeteranoB"), Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
             }
-            else 
+            else
             {
-                if (Evento == "Fin Atencion" && nombrePeluquero == Peluquero.Nombre.Aprendiz.ToString()) { 
-                    dgv_simulaciones.Rows.Add(Evento + "(" + contadorClienteAtendido + ")", Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
+                if (Evento == "Fin Atencion" && nombrePeluquero == Peluquero.Nombre.Aprendiz.ToString())
+                {
+                    dgv_simulaciones.Rows.Add(Evento /*+ "(" + contadorClienteAtendido + ")"*/, Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
                , "-", "-", "-", "-", Math.Round(random_atencionAprendiz, 4), ObtenerTiempoAtencion("Aprendiz"), finAtencionAprendiz, "-", "-", "-", "-", "-", "-", ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("VeteranoA"), ObtenerColaPeluquero("VeteranoA"), ObtenerEstadoPeluquero("VeteranoB"), ObtenerColaPeluquero("VeteranoB"), Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
                 }
                 else if (Evento == "Fin Atencion" && nombrePeluquero == Peluquero.Nombre.VeteranoA.ToString())
                 {
-                    dgv_simulaciones.Rows.Add(Evento + "(" + contadorClienteAtendido + ")", Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
+                    dgv_simulaciones.Rows.Add(Evento /*+ "(" + contadorClienteAtendido + ")"*/, Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
                                    , "-", "-", "-", "-", "-", "-", "-", Math.Round(random_atencionVetA, 4), ObtenerTiempoAtencion("VeteranoA"), finAtencionVeteranoA, "-", "-", "-", ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("VeteranoA"), ObtenerColaPeluquero("VeteranoA"), ObtenerEstadoPeluquero("VeteranoB"), ObtenerColaPeluquero("VeteranoB"), Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
                 }
                 else if (Evento == "Fin Atencion" && nombrePeluquero == Peluquero.Nombre.VeteranoB.ToString())
                 {
-                    dgv_simulaciones.Rows.Add(Evento + "(" + contadorClienteAtendido + ")", Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
+                    dgv_simulaciones.Rows.Add(Evento /*+ "(" + contadorClienteAtendido + ")"*/, Math.Round((double)menorTiempoFin, 4), supera8hs, "-", "-", "-"
                   , "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", Math.Round(random_atencionVetB, 4), ObtenerTiempoAtencion("VeteranoB"), finAtencionVeteranoB, ObtenerEstadoPeluquero("Aprendiz"), ObtenerColaPeluquero("Aprendiz"), ObtenerEstadoPeluquero("VeteranoA"), ObtenerColaPeluquero("VeteranoA"), ObtenerEstadoPeluquero("VeteranoB"), ObtenerColaPeluquero("VeteranoB"), Math.Round(acumOcupacionAprendiz, 4), cantMasAltaDeClientesCola);
                 }
             }
-            
+
 
         }
         public double ObtenerTiempoAtencion(string nombre)
