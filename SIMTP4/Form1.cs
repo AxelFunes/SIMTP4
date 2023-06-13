@@ -307,6 +307,10 @@ namespace SIMTP4
                                     if (cliente.TiempoEspera >= 30 && cliente.estado == Cliente.Estado.EsperandoAtencion && peluquero.nombre.ToString() == cliente.Peluquero)
                                     {
                                         cliente.estado = Cliente.Estado.Cancelado;
+                                        if (peluquero.cola > 0)
+                                        {
+                                            peluquero.cola--;
+                                        }
                                         //peluquero.cola--;
                                     }
                                     if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
@@ -462,6 +466,10 @@ namespace SIMTP4
                             if (cliente.TiempoEspera >= 30 && cliente.estado == Cliente.Estado.EsperandoAtencion && peluquero.nombre.ToString() == cliente.Peluquero)
                             {
                                 cliente.estado = Cliente.Estado.Cancelado;
+                                if (peluquero.cola>0)
+                                {
+                                    peluquero.cola--;
+                                }
                                 //peluquero.cola--;
                             }
                             if (cliente.estado == Cliente.Estado.SiendoAtendido && cliente.Peluquero == peluquero.nombre.ToString())
@@ -473,7 +481,7 @@ namespace SIMTP4
                                 //peluquero.finTiempoAtencion = 0;
                                 //listaCliente.Remove(cliente);
                                 //idClienteAtendido = peluquero.idCliente;
-                                break;
+                                //break;
                             }
                             if (cliente.estado == Cliente.Estado.EsperandoAtencion && cliente.Peluquero == peluquero.nombre.ToString() && peluquero.estado == Peluquero.Estado.Libre)
                             {
@@ -574,14 +582,18 @@ namespace SIMTP4
                 {
                     estadoVetA = peluca.estado.ToString();
                 }
-                else
+                else if (peluca.nombre == Peluquero.Nombre.VeteranoB)
                 {
                     estadoVetB = peluca.estado.ToString();
                 }
-                if (estadoAprendiz == "Libre" && estadoVetA == "Libre" && estadoVetB == "Libre")
-                {
-                    colasVacias = true;
-                }
+                //if (estadoAprendiz == "Libre" && estadoVetA == "Libre" && estadoVetB == "Libre")
+                //{
+                //    colasVacias = true;
+                //}
+            }
+            if (estadoAprendiz == "Libre" && estadoVetA == "Libre" && estadoVetB == "Libre")
+            {
+                colasVacias = true;
             }
         }
         public void TotalCLientesCola()
